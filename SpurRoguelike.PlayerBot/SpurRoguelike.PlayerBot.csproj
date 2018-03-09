@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Cell.cs" />
     <Compile Include="Map.cs" />
+    <Compile Include="Navigator.cs" />
     <Compile Include="PlayerBot.cs" />
     <Compile Include="PlayerView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -8,17 +8,25 @@ namespace SpurRoguelike.PlayerBot
     public class PlayerBot : IPlayerController
     {
         private Map map;
+        private Navigator navigator;
+
+        public PlayerBot()
+        {
+            map = new Map();
+            navigator = new Navigator(map);
+        }
 
         public Turn MakeTurn(LevelView levelView, IMessageReporter messageReporter)
         {
-            if (map == null) map = new Map();
-            Thread.Sleep(500);
+            //Thread.Sleep(100);
 
-            map.Refresh(levelView);
+            navigator.Refresh(levelView, messageReporter);
 
-
-
-            return Turn.Step(StepDirection.North);
+            if (levelView.Player.Health < 50)
+                return navigator.GoToTheHealthPack();
+            if (navigator.CheckCellsAround(map.PlayerLocation, typeof(PawnView)))
+                return navigator.Attack();
+            return navigator.GoToTheMonster();
         }
     }
 }

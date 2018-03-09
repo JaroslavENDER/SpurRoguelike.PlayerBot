@@ -9,14 +9,40 @@ namespace SpurRoguelike.PlayerBot
     {
         private List<Cell> items;
         public int Count { get => items.Count; }
+        public int LevelWidth { get; private set; }
+        public int LevelHeight { get; private set; }
 
         public Map()
         {
             items = new List<Cell>();
         }
 
+        public Location PlayerLocation { get => items.SingleOrDefault(cell => cell.View is PlayerView).Location; }
+
+        private void Add(Location location, CellType cellType, IView view)
+        {
+            var cell = GetCell(location);
+            if (cell != null)
+            {
+                cell.CellType = cellType;
+                cell.View = view;
+            }
+            else
+            {
+                items.Add(new Cell(location, cellType, view));
+            }
+        }
+
+        public Cell GetCell(Location location)
+        {
+            return items.SingleOrDefault(c => c.Location == location);
+        }
+
         public void Refresh(LevelView levelView)
         {
+            LevelWidth = levelView.Field.Width;
+            LevelHeight = levelView.Field.Height;
+
             for (var x = 0; x < levelView.Field.Width; x++)
                 for (var y = 0; y < levelView.Field.Height; y++)
                 {
@@ -49,25 +75,6 @@ namespace SpurRoguelike.PlayerBot
             var playerLocation = player.Location;
             var playerCellType = levelView.Field[playerLocation];
             Add(playerLocation, playerCellType, new PlayerView(player));
-        }
-
-        private void Add(Location location, CellType cellType, IView view)
-        {
-            var cell = GetCell(location);
-            if (cell != null)
-            {
-                cell.CellType = cellType;
-                cell.View = view;
-            }
-            else
-            {
-                items.Add(new Cell(location, cellType, view));
-            }
-        }
-
-        private Cell GetCell(Location location)
-        {
-            return items.SingleOrDefault(c => c.Location == location);
         }
     }
 }
