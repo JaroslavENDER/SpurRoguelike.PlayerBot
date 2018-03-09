@@ -11,10 +11,10 @@ namespace SpurRoguelike.PlayerBot
         private IMessageReporter messageReporter;
         private Offset[] offsetsToMove = new Offset[] 
         {
-            new Offset(1, 0),
+            new Offset(0, -1),
             new Offset(0, 1),
+            new Offset(1, 0),
             new Offset(-1, 0),
-            new Offset(0, -1)
         };
         private Offset[] offsetsToAttack = new Offset[] 
         {
@@ -126,6 +126,14 @@ namespace SpurRoguelike.PlayerBot
         {
             foreach (var cell in map.GetCells())
                 if (cell.View is PawnView)
+                    return true;
+            return false;
+        }
+
+        public bool IsHaveHealthPacks()
+        {
+            foreach (var cell in map.GetCells())
+                if (cell.View is HealthPackView)
                     return true;
             return false;
         }

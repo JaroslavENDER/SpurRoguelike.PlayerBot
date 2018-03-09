@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using SpurRoguelike.Core;
+﻿using SpurRoguelike.Core;
 using SpurRoguelike.Core.Primitives;
 using SpurRoguelike.Core.Views;
 
@@ -18,11 +17,14 @@ namespace SpurRoguelike.PlayerBot
 
         public Turn MakeTurn(LevelView levelView, IMessageReporter messageReporter)
         {
-            //Thread.Sleep(100);
-
             navigator.Refresh(levelView, messageReporter);
+
             if (levelView.Player.Health < 70)
-                return navigator.GoToTheHealthPack();
+            {
+                if (navigator.IsHaveHealthPacks())
+                    return navigator.GoToTheHealthPack();
+                return navigator.GoToExit();
+            }
             if (navigator.IsHaveMonsters())
             {
                 if (navigator.CheckCellsAround(map.Player.Location, typeof(PawnView)))
