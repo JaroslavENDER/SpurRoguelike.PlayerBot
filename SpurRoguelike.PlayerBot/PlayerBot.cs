@@ -21,12 +21,15 @@ namespace SpurRoguelike.PlayerBot
             //Thread.Sleep(100);
 
             navigator.Refresh(levelView, messageReporter);
-
-            if (levelView.Player.Health < 50)
+            if (levelView.Player.Health < 70)
                 return navigator.GoToTheHealthPack();
-            if (navigator.CheckCellsAround(map.PlayerLocation, typeof(PawnView)))
-                return navigator.Attack();
-            return navigator.GoToTheMonster();
+            if (navigator.IsHaveMonsters())
+            {
+                if (navigator.CheckCellsAround(map.Player.Location, typeof(PawnView)))
+                    return navigator.Attack();
+                return navigator.GoToTheMonster();
+            }
+            return navigator.GoToExit();
         }
     }
 }

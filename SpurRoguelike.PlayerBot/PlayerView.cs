@@ -1,8 +1,9 @@
-﻿using SpurRoguelike.Core.Views;
+﻿using SpurRoguelike.Core.Primitives;
+using SpurRoguelike.Core.Views;
 
 namespace SpurRoguelike.PlayerBot
 {
-    internal class PlayerView : IView
+    internal struct PlayerView : IView
     {
         private PawnView player;
 
@@ -10,6 +11,8 @@ namespace SpurRoguelike.PlayerBot
         {
             this.player = player;
         }
+
+        public Location Location => player.Location;
 
         public bool HasValue => player.HasValue;
     }

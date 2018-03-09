@@ -40,34 +40,41 @@ namespace SpurRoguelike.PlayerBot
 
         public Turn Attack()
         {
-            var path = GetPathTo(offsetsToAttack, map.PlayerLocation, typeof(PawnView), null);
+            var path = GetPathTo(offsetsToAttack, cell => cell.View is PawnView);
             if (path.Count == 0) return Turn.None;
             return Turn.Attack(path.Pop());
         }
 
         public Turn GoToTheMonster()
         {
-            var path = GetPathTo(offsetsToMove, map.PlayerLocation, typeof(PawnView), null);
+            var path = GetPathTo(offsetsToMove, cell => cell.View is PawnView);
             if (path.Count == 0) return Turn.None;
             return Turn.Step(path.Pop());
         }
 
         public Turn GoToTheHealthPack()
         {
-            var path = GetPathTo(offsetsToMove, map.PlayerLocation, typeof(HealthPackView), typeof(PawnView));
+            var path = GetPathTo(offsetsToMove, cell => cell.View is HealthPackView, cell => cell.View is PawnView);
             if (path.Count == 0) return Turn.None;
             return Turn.Step(path.Pop());
         }
 
-        private Stack<Offset> GetPathTo(Offset[] offsets, Location startLocation, Type searchType, Type aviodType)
+        public Turn GoToExit()
+        {
+            var path = GetPathTo(offsetsToMove, cell => cell.CellType == CellType.Exit, cell => cell.View is PawnView);
+            if (path.Count == 0) return Turn.None;
+            return Turn.Step(path.Pop());
+        }
+
+        private Stack<Offset> GetPathTo(Offset[] offsets, Func<Cell, bool> searchPredicate, Func<Cell, bool> aviodPredicate = null)
         {
             var pathFromDirections = new Dictionary<Location, Offset>(); //Location and direction who brought here
             var pathFromLocations = new Dictionary<Location, Location>(); //Location and location from which he came here
-            Location currentLocation = default(Location);
-            Cell currentCell = null;
+            var currentLocation = default(Location);
+            var currentCell = default(Cell);
             var searchSuccessful = false;
             var queue = new Queue<Location>();
-            queue.Enqueue(startLocation);
+            queue.Enqueue(map.Player.Location);
 
             while (queue.Count > 0)
             {
@@ -75,9 +82,9 @@ namespace SpurRoguelike.PlayerBot
                 currentCell = map.GetCell(currentLocation);
                 if (currentCell == null
                     || currentCell.CellType == CellType.Hidden || currentCell.CellType == CellType.Wall || currentCell.CellType == CellType.Trap
-                    || (currentCell.View != null && currentCell.View.GetType() == aviodType))
+                    || (aviodPredicate != null && aviodPredicate.Invoke(currentCell)))
                     continue;
-                if (currentCell.View?.GetType() == searchType)
+                if (searchPredicate(currentCell))
                 {
                     searchSuccessful = true;
                     break;
@@ -99,7 +106,7 @@ namespace SpurRoguelike.PlayerBot
             {
                 result.Push(pathFromDirections[currentLocation]);
                 currentLocation = pathFromLocations[currentLocation];
-            } while (currentLocation != startLocation);
+            } while (currentLocation != map.Player.Location);
             return result;
         }
 
@@ -112,6 +119,14 @@ namespace SpurRoguelike.PlayerBot
                 if (cell?.View?.GetType() == searchType)
                     return true;
             }
+            return false;
+        }
+
+        public bool IsHaveMonsters()
+        {
+            foreach (var cell in map.GetCells())
+                if (cell.View is PawnView)
+                    return true;
             return false;
         }
     }

@@ -17,7 +17,7 @@ namespace SpurRoguelike.PlayerBot
             items = new List<Cell>();
         }
 
-        public Location PlayerLocation { get => items.SingleOrDefault(cell => cell.View is PlayerView).Location; }
+        public Cell Player { get => items.SingleOrDefault(cell => cell.View is PlayerView); }
 
         private void Add(Location location, CellType cellType, IView view)
         {
@@ -37,11 +37,17 @@ namespace SpurRoguelike.PlayerBot
         {
             return items.SingleOrDefault(c => c.Location == location);
         }
+        public IEnumerable<Cell> GetCells()
+        {
+            return items as IEnumerable<Cell>;
+        }
 
         public void Refresh(LevelView levelView)
         {
             LevelWidth = levelView.Field.Width;
             LevelHeight = levelView.Field.Height;
+            if (Player != null)
+                Player.View = null;
 
             for (var x = 0; x < levelView.Field.Width; x++)
                 for (var y = 0; y < levelView.Field.Height; y++)
