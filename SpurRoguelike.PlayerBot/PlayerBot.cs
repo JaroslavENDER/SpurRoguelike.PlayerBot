@@ -1,4 +1,4 @@
-﻿using System.Linq;
+﻿using System.Threading;
 using SpurRoguelike.Core;
 using SpurRoguelike.Core.Primitives;
 using SpurRoguelike.Core.Views;
@@ -7,24 +7,18 @@ namespace SpurRoguelike.PlayerBot
 {
     public class PlayerBot : IPlayerController
     {
+        private Map map;
+
         public Turn MakeTurn(LevelView levelView, IMessageReporter messageReporter)
         {
-            messageReporter.ReportMessage("Hey ho! I'm still breathing");
+            if (map == null) map = new Map();
+            Thread.Sleep(500);
 
-            if (levelView.Random.NextDouble() < 0.1)
-                return Turn.None;
+            map.Refresh(levelView);
 
-            var nearbyMonster = levelView.Monsters.FirstOrDefault(m => IsInAttackRange(levelView.Player.Location, m.Location));
 
-            if (nearbyMonster.HasValue)
-                return Turn.Attack(nearbyMonster.Location - levelView.Player.Location);
 
-            return Turn.Step((StepDirection)levelView.Random.Next(4));
-        }
-
-        private static bool IsInAttackRange(Location a, Location b)
-        {
-            return a.IsInRange(b, 1);
+            return Turn.Step(StepDirection.North);
         }
     }
 }
