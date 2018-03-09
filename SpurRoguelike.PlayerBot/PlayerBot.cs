@@ -31,6 +31,9 @@ namespace SpurRoguelike.PlayerBot
                     return navigator.Attack();
                 return navigator.GoToTheMonster();
             }
+
+            if (navigator.IsHaveHealthPacks())
+                return navigator.GoToTheHealthPack();
             return navigator.GoToExit();
         }
     }
