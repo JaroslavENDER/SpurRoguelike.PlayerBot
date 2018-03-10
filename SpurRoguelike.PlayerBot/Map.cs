@@ -44,10 +44,12 @@ namespace SpurRoguelike.PlayerBot
 
         public void Refresh(LevelView levelView)
         {
-            LevelWidth = levelView.Field.Width;
-            LevelHeight = levelView.Field.Height;
-            if (Player != null)
-                Player.View = null;
+            if (LevelWidth != levelView.Field.Width && LevelHeight != levelView.Field.Height)
+            {
+                LevelWidth = levelView.Field.Width;
+                LevelHeight = levelView.Field.Height;
+                items.Clear();
+            }
 
             for (var x = 0; x < levelView.Field.Width; x++)
                 for (var y = 0; y < levelView.Field.Height; y++)

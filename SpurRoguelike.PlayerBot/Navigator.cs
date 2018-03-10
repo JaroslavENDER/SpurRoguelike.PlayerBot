@@ -52,7 +52,7 @@ namespace SpurRoguelike.PlayerBot
 
         public Stack<Offset> GetPathToTheHealthPack()
         {
-            return GetPathTo(offsetsToMove, cell => cell.View is HealthPackView, cell => cell.View is PawnView);
+            return GetPathTo(offsetsToMove, cell => cell.View is HealthPackView, cell => cell.View is PawnView || cell.View is ItemView);
         }
 
         public Stack<Offset> GetPathToExit()
