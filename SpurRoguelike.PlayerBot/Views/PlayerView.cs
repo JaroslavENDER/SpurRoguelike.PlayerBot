@@ -1,7 +1,7 @@
 ﻿using SpurRoguelike.Core.Primitives;
 using SpurRoguelike.Core.Views;
 
-namespace SpurRoguelike.PlayerBot
+namespace SpurRoguelike.PlayerBot.Views
 {
     internal struct PlayerView : IView
     {

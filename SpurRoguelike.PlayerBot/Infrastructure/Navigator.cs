@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using SpurRoguelike.Core.Primitives;
 using SpurRoguelike.Core.Views;
+using SpurRoguelike.PlayerBot.Primitives;
 
-namespace SpurRoguelike.PlayerBot
+namespace SpurRoguelike.PlayerBot.Infrastructure
 {
     internal class Navigator
     {

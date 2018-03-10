@@ -1,7 +1,7 @@
-﻿using System;
-using SpurRoguelike.Core;
+﻿using SpurRoguelike.Core;
 using SpurRoguelike.Core.Primitives;
 using SpurRoguelike.Core.Views;
+using SpurRoguelike.PlayerBot.Infrastructure;
 
 namespace SpurRoguelike.PlayerBot
 {

@@ -40,12 +40,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Autopilot.cs" />
-    <Compile Include="Cell.cs" />
-    <Compile Include="Map.cs" />
-    <Compile Include="Navigator.cs" />
+    <Compile Include="Infrastructure\Autopilot.cs" />
+    <Compile Include="Primitives\Cell.cs" />
+    <Compile Include="Infrastructure\Map.cs" />
+    <Compile Include="Infrastructure\Navigator.cs" />
     <Compile Include="PlayerBot.cs" />
-    <Compile Include="PlayerView.cs" />
+    <Compile Include="Views\PlayerView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

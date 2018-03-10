@@ -1,9 +1,11 @@
 ﻿using SpurRoguelike.Core.Primitives;
 using SpurRoguelike.Core.Views;
+using SpurRoguelike.PlayerBot.Primitives;
+using SpurRoguelike.PlayerBot.Views;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SpurRoguelike.PlayerBot
+namespace SpurRoguelike.PlayerBot.Infrastructure
 {
     internal class Map
     {

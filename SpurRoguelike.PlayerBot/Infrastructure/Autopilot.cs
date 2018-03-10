@@ -2,7 +2,7 @@
 using SpurRoguelike.Core.Views;
 using System.Collections.Generic;
 
-namespace SpurRoguelike.PlayerBot
+namespace SpurRoguelike.PlayerBot.Infrastructure
 {
     internal class Autopilot
     {
