@@ -12,12 +12,14 @@ namespace SpurRoguelike.PlayerBot.Infrastructure
         private List<Cell> items;
         private IMessageReporter logger;
         public int Count { get => items.Count; }
+        public int Level { get; private set; }
         public int LevelWidth { get; private set; }
         public int LevelHeight { get; private set; }
 
         public Map()
         {
             items = new List<Cell>();
+            Level = 0;
         }
         public void SetLogger(IMessageReporter messageReporter)
         {
@@ -56,6 +58,7 @@ namespace SpurRoguelike.PlayerBot.Infrastructure
                 LevelWidth = levelView.Field.Width;
                 LevelHeight = levelView.Field.Height;
                 items.Clear();
+                Level++;
             }
 
             for (var x = 0; x < levelView.Field.Width; x++)
