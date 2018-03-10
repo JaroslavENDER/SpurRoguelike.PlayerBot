@@ -48,7 +48,7 @@ namespace SpurRoguelike.PlayerBot
                 autopilot.Activate(navigator.GetPathToTheHealthPack(), isSafePath: true);
             else
                 autopilot.Activate(navigator.GetPathToExit(), isSafePath: true);
-            return autopilot.GetTurn();
+            return autopilot.GetTurn() ?? Turn.None;
         }
 
         private Turn GoToTheMonster()
@@ -56,7 +56,7 @@ namespace SpurRoguelike.PlayerBot
             if (navigator.CheckCellsAround(map.Player.Location, cell => cell?.View is PawnView))
                 return Turn.Attack(navigator.GetOffsetToAttack());
             autopilot.Activate(navigator.GetPathToTheMonster(), isSafePath: true);
-            return autopilot.GetTurn();
+            return autopilot.GetTurn() ?? Turn.None;
         }
 
         private Turn GoToTheEnd()
@@ -65,7 +65,7 @@ namespace SpurRoguelike.PlayerBot
                 autopilot.Activate(navigator.GetPathToTheHealthPack(), isSafePath: true);
             else
                 autopilot.Activate(navigator.GetPathToExit(), isSafePath: true);
-            return autopilot.GetTurn();
+            return autopilot.GetTurn() ?? Turn.None;
         }
     }
 }
