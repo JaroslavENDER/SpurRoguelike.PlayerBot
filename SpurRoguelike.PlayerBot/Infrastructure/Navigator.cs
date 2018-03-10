@@ -28,6 +28,7 @@ namespace SpurRoguelike.PlayerBot.Infrastructure
             new Offset(0, 1),
             new Offset(1, 1)
         };
+        private Random rand = new Random();
 
         public Navigator(Map map)
         {
@@ -83,6 +84,7 @@ namespace SpurRoguelike.PlayerBot.Infrastructure
                     searchSuccessful = true;
                     break;
                 }
+                Mix(offsets);
                 foreach (var offset in offsets)
                 {
                     var nextLocation = currentLocation + offset;
@@ -102,6 +104,18 @@ namespace SpurRoguelike.PlayerBot.Infrastructure
                 currentLocation = pathFromLocations[currentLocation];
             } while (currentLocation != map.Player.Location);
             return result;
+        }
+
+        private void Mix(Offset[] offsets)
+        {
+            for (var i = 0; i < offsets.Length; i++)
+            {
+                var a = rand.Next(offsets.Length);
+                var b = rand.Next(offsets.Length);
+                var temp = offsets[a];
+                offsets[a] = offsets[b];
+                offsets[b] = temp;
+            }
         }
 
         public bool CheckCellsAround(Location startLocation, Func<Cell, bool> searchPredicate)
