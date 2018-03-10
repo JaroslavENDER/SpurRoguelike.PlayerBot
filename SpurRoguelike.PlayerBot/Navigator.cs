@@ -38,11 +38,6 @@ namespace SpurRoguelike.PlayerBot
             map.Refresh(levelView);
         }
 
-        public Location GetPlayerLocation()
-        {
-            return map.Player.Location;
-        }
-
         public Offset GetOffsetToAttack()
         {
             var path = GetPathTo(offsetsToAttack, cell => cell.View is PawnView);
