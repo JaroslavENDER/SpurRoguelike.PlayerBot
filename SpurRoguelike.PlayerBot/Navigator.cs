@@ -8,7 +8,7 @@ namespace SpurRoguelike.PlayerBot
     internal class Navigator
     {
         private Map map;
-        private IMessageReporter messageReporter;
+        private IMessageReporter logger;
         private Offset[] offsetsToMove = new Offset[] 
         {
             new Offset(0, -1),
@@ -32,10 +32,9 @@ namespace SpurRoguelike.PlayerBot
         {
             this.map = map;
         }
-        public void Refresh(LevelView levelView, IMessageReporter messageReporter)
+        public void SetLogger(IMessageReporter messageReporter)
         {
-            this.messageReporter = messageReporter;
-            map.Refresh(levelView);
+            logger = messageReporter;
         }
 
         public Offset GetOffsetToAttack()

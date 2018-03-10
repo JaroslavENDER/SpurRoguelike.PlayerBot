@@ -7,6 +7,7 @@ namespace SpurRoguelike.PlayerBot
     internal class Autopilot
     {
         private Map map;
+        private IMessageReporter logger;
         private Stack<Offset> path;
         private bool isSafePath;
         public bool IsActive { get; private set; }
@@ -14,6 +15,10 @@ namespace SpurRoguelike.PlayerBot
         public Autopilot(Map map)
         {
             this.map = map;
+        }
+        public void SetLogger(IMessageReporter messageReporter)
+        {
+            logger = messageReporter;
         }
 
         public void Activate(Stack<Offset> path, bool isSafePath)

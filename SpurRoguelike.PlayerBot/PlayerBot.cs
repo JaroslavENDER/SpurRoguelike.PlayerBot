@@ -20,7 +20,10 @@ namespace SpurRoguelike.PlayerBot
 
         public Turn MakeTurn(LevelView levelView, IMessageReporter messageReporter)
         {
-            navigator.Refresh(levelView, messageReporter);
+            map.Refresh(levelView);
+            map.SetLogger(messageReporter);
+            navigator.SetLogger(messageReporter);
+            autopilot.SetLogger(messageReporter);
 
             //System.Threading.Thread.Sleep(500);
 

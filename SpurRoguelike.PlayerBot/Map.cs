@@ -8,6 +8,7 @@ namespace SpurRoguelike.PlayerBot
     internal class Map
     {
         private List<Cell> items;
+        private IMessageReporter logger;
         public int Count { get => items.Count; }
         public int LevelWidth { get; private set; }
         public int LevelHeight { get; private set; }
@@ -15,6 +16,10 @@ namespace SpurRoguelike.PlayerBot
         public Map()
         {
             items = new List<Cell>();
+        }
+        public void SetLogger(IMessageReporter messageReporter)
+        {
+            logger = messageReporter;
         }
 
         public Cell Player { get => items.SingleOrDefault(cell => cell.View is PlayerView); }
