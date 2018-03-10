@@ -61,6 +61,11 @@ namespace SpurRoguelike.PlayerBot.Infrastructure
             return GetPathTo(offsetsToMove, cell => cell.CellType == CellType.Exit, cell => cell.View is PawnView);
         }
 
+        public Stack<Offset> GetPathToTheObscurity()
+        {
+            return GetPathTo(offsetsToMove, cell => cell.CellType == CellType.Hidden, cell => cell.View is PawnView);
+        }
+
         private Stack<Offset> GetPathTo(Offset[] offsets, Func<Cell, bool> searchPredicate, Func<Cell, bool> aviodPredicate = null)
         {
             var pathFromDirections = new Dictionary<Location, Offset>(); //Location and direction who brought here
@@ -76,7 +81,7 @@ namespace SpurRoguelike.PlayerBot.Infrastructure
                 currentLocation = queue.Dequeue();
                 currentCell = map.GetCell(currentLocation);
                 if (currentCell == null
-                    || currentCell.CellType == CellType.Hidden || currentCell.CellType == CellType.Wall || currentCell.CellType == CellType.Trap
+                    || currentCell.CellType == CellType.Wall || currentCell.CellType == CellType.Trap
                     || (aviodPredicate != null && aviodPredicate.Invoke(currentCell)))
                     continue;
                 if (searchPredicate(currentCell))

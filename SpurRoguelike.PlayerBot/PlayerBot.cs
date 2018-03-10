@@ -10,6 +10,7 @@ namespace SpurRoguelike.PlayerBot
         private Map map;
         private Navigator navigator;
         private Autopilot autopilot;
+        private IMessageReporter logger;
 
         public PlayerBot()
         {
@@ -20,6 +21,7 @@ namespace SpurRoguelike.PlayerBot
 
         public Turn MakeTurn(LevelView levelView, IMessageReporter messageReporter)
         {
+            logger = messageReporter;
             map.Refresh(levelView);
             map.SetLogger(messageReporter);
             navigator.SetLogger(messageReporter);
@@ -48,7 +50,7 @@ namespace SpurRoguelike.PlayerBot
                 autopilot.Activate(navigator.GetPathToTheHealthPack(), isSafePath: true);
             else
                 autopilot.Activate(navigator.GetPathToExit(), isSafePath: true);
-            return autopilot.GetTurn() ?? Turn.None;
+            return autopilot.GetTurn() ?? GoToTheObscurity();
         }
 
         private Turn GoToTheMonster()
@@ -56,7 +58,7 @@ namespace SpurRoguelike.PlayerBot
             if (navigator.CheckCellsAround(map.Player.Location, cell => cell?.View is PawnView))
                 return Turn.Attack(navigator.GetOffsetToAttack());
             autopilot.Activate(navigator.GetPathToTheMonster(), isSafePath: true);
-            return autopilot.GetTurn() ?? Turn.None;
+            return autopilot.GetTurn() ?? GoToTheObscurity();
         }
 
         private Turn GoToTheEnd()
@@ -65,6 +67,14 @@ namespace SpurRoguelike.PlayerBot
                 autopilot.Activate(navigator.GetPathToTheHealthPack(), isSafePath: true);
             else
                 autopilot.Activate(navigator.GetPathToExit(), isSafePath: true);
+            return autopilot.GetTurn() ?? GoToTheObscurity();
+        }
+
+        private Turn GoToTheObscurity()
+        {
+            var path = navigator.GetPathToTheObscurity();
+            logger.ReportMessage(path.Count.ToString());
+            autopilot.Activate(path, isSafePath: true);
             return autopilot.GetTurn() ?? Turn.None;
         }
     }
