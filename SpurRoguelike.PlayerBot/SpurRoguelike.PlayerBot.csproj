@@ -45,7 +45,6 @@
     <Compile Include="Infrastructure\Map.cs" />
     <Compile Include="Infrastructure\Navigator.cs" />
     <Compile Include="PlayerBot.cs" />
-    <Compile Include="Views\PlayerView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,24 +1,20 @@
 ﻿using SpurRoguelike.Core.Primitives;
 using SpurRoguelike.Core.Views;
 using SpurRoguelike.PlayerBot.Primitives;
-using SpurRoguelike.PlayerBot.Views;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SpurRoguelike.PlayerBot.Infrastructure
 {
     internal class Map
     {
-        private List<Cell> items;
+        private Cell[,] items;
         private IMessageReporter logger;
-        public int Count { get => items.Count; }
         public int Level { get; private set; }
         public int LevelWidth { get; private set; }
         public int LevelHeight { get; private set; }
 
         public Map()
         {
-            items = new List<Cell>();
             Level = 0;
         }
         public void SetLogger(IMessageReporter messageReporter)
@@ -26,7 +22,7 @@ namespace SpurRoguelike.PlayerBot.Infrastructure
             logger = messageReporter;
         }
 
-        public Cell Player { get => items.SingleOrDefault(cell => cell.View is PlayerView); }
+        public Cell Player { get; private set; }
 
         private void Add(Location location, CellType cellType, IView view)
         {
@@ -38,17 +34,21 @@ namespace SpurRoguelike.PlayerBot.Infrastructure
             }
             else
             {
-                items.Add(new Cell(location, cellType, view));
+                items[location.X, location.Y] = new Cell(location, cellType, view);
             }
         }
 
         public Cell GetCell(Location location)
         {
-            return items.SingleOrDefault(c => c.Location == location);
+            if (location.X < 0 || location.X >= LevelWidth) return null;
+            if (location.Y < 0 || location.Y >= LevelHeight) return null;
+            return items[location.X, location.Y];
         }
         public IEnumerable<Cell> GetCells()
         {
-            return items as IEnumerable<Cell>;
+            for (var x = 0; x < LevelWidth; x++)
+                for (var y = 0; y < LevelHeight; y++)
+                    yield return items[x, y];
         }
 
         public void Refresh(LevelView levelView)
@@ -57,7 +57,7 @@ namespace SpurRoguelike.PlayerBot.Infrastructure
             {
                 LevelWidth = levelView.Field.Width;
                 LevelHeight = levelView.Field.Height;
-                items.Clear();
+                items = new Cell[LevelWidth, LevelHeight];
                 Level++;
                 for (var x = 0; x < levelView.Field.Width; x++)
                     for (var y = 0; y < levelView.Field.Height; y++)
@@ -98,10 +98,7 @@ namespace SpurRoguelike.PlayerBot.Infrastructure
                 var cellType = levelView.Field[location];
                 Add(location, cellType, view);
             }
-            var player = levelView.Player;
-            var playerLocation = player.Location;
-            var playerCellType = levelView.Field[playerLocation];
-            Add(playerLocation, playerCellType, new PlayerView(player));
+            Player = items[levelView.Player.Location.X, levelView.Player.Location.Y];
         }
     }
 }
