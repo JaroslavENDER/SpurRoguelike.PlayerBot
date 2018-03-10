@@ -22,19 +22,19 @@ namespace SpurRoguelike.PlayerBot
             if (levelView.Player.Health < 70)
             {
                 if (navigator.IsHaveHealthPacks())
-                    return navigator.GoToTheHealthPack();
-                return navigator.GoToExit();
+                    return Turn.Step(navigator.GetPathToTheHealthPack().Pop());
+                return Turn.Step(navigator.GetPathToExit().Pop());
             }
             if (navigator.IsHaveMonsters())
             {
-                if (navigator.CheckCellsAround(map.Player.Location, typeof(PawnView)))
-                    return navigator.Attack();
-                return navigator.GoToTheMonster();
+                if (navigator.CheckCellsAround(map.Player.Location, cell => cell?.View is PawnView))
+                    return Turn.Attack(navigator.GetOffsetToAttack());
+                return Turn.Step(navigator.GetPathToTheMonster().Pop());
             }
 
             if (navigator.IsHaveHealthPacks())
-                return navigator.GoToTheHealthPack();
-            return navigator.GoToExit();
+                return Turn.Step(navigator.GetPathToTheHealthPack().Pop());
+            return Turn.Step(navigator.GetPathToExit().Pop());
         }
     }
 }

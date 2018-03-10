@@ -38,32 +38,26 @@ namespace SpurRoguelike.PlayerBot
             map.Refresh(levelView);
         }
 
-        public Turn Attack()
+        public Offset GetOffsetToAttack()
         {
             var path = GetPathTo(offsetsToAttack, cell => cell.View is PawnView);
-            if (path.Count == 0) return Turn.None;
-            return Turn.Attack(path.Pop());
+            if (path.Count != 1) return default(Offset);
+            return path.Pop();
         }
 
-        public Turn GoToTheMonster()
+        public Stack<Offset> GetPathToTheMonster()
         {
-            var path = GetPathTo(offsetsToMove, cell => cell.View is PawnView);
-            if (path.Count == 0) return Turn.None;
-            return Turn.Step(path.Pop());
+            return GetPathTo(offsetsToMove, cell => cell.View is PawnView);
         }
 
-        public Turn GoToTheHealthPack()
+        public Stack<Offset> GetPathToTheHealthPack()
         {
-            var path = GetPathTo(offsetsToMove, cell => cell.View is HealthPackView, cell => cell.View is PawnView);
-            if (path.Count == 0) return Turn.None;
-            return Turn.Step(path.Pop());
+            return GetPathTo(offsetsToMove, cell => cell.View is HealthPackView, cell => cell.View is PawnView);
         }
 
-        public Turn GoToExit()
+        public Stack<Offset> GetPathToExit()
         {
-            var path = GetPathTo(offsetsToMove, cell => cell.CellType == CellType.Exit, cell => cell.View is PawnView);
-            if (path.Count == 0) return Turn.None;
-            return Turn.Step(path.Pop());
+            return GetPathTo(offsetsToMove, cell => cell.CellType == CellType.Exit, cell => cell.View is PawnView);
         }
 
         private Stack<Offset> GetPathTo(Offset[] offsets, Func<Cell, bool> searchPredicate, Func<Cell, bool> aviodPredicate = null)
@@ -110,13 +104,13 @@ namespace SpurRoguelike.PlayerBot
             return result;
         }
 
-        public bool CheckCellsAround(Location startLocation, Type searchType)
+        public bool CheckCellsAround(Location startLocation, Func<Cell, bool> searchPredicate)
         {
             foreach (var offset in offsetsToAttack)
             {
                 var location = startLocation + offset;
                 var cell = map.GetCell(location);
-                if (cell?.View?.GetType() == searchType)
+                if (searchPredicate(cell))
                     return true;
             }
             return false;
