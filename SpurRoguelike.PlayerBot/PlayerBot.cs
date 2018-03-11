@@ -37,40 +37,40 @@ namespace SpurRoguelike.PlayerBot
             }
 
             if (levelView.Player.Health < 70)
-                return GoToTheHealth();
+                return GoToTheHealth(levelView, messageReporter);
             if (navigator.IsHaveMonsters())
-                return GoToTheMonster();
+                return GoToTheMonster(levelView, messageReporter);
 
-            return GoToTheEnd();
+            return GoToTheEnd(levelView, messageReporter);
         }
 
-        private Turn GoToTheHealth()
+        private Turn GoToTheHealth(LevelView levelView, IMessageReporter messageReporter)
         {
             if (navigator.IsHaveHealthPacks())
                 autopilot.Activate(navigator.GetPathToTheHealthPack(), isSafePath: true);
             else
                 autopilot.Activate(navigator.GetPathToExit(), isSafePath: true);
-            return autopilot.GetTurn() ?? GoToTheObscurity();
+            return autopilot.GetTurn() ?? GoToTheObscurity(levelView, messageReporter);
         }
 
-        private Turn GoToTheMonster()
+        private Turn GoToTheMonster(LevelView levelView, IMessageReporter messageReporter)
         {
             if (navigator.CheckCellsAround(map.Player.Location, cell => cell?.View is PawnView))
                 return Turn.Attack(navigator.GetOffsetToAttack());
             autopilot.Activate(navigator.GetPathToTheMonster(), isSafePath: true);
-            return autopilot.GetTurn() ?? GoToTheObscurity();
+            return autopilot.GetTurn() ?? GoToTheObscurity(levelView, messageReporter);
         }
 
-        private Turn GoToTheEnd()
+        private Turn GoToTheEnd(LevelView levelView, IMessageReporter messageReporter)
         {
-            if (navigator.IsHaveHealthPacks())
+            if (levelView.Player.Health < 100 && navigator.IsHaveHealthPacks())
                 autopilot.Activate(navigator.GetPathToTheHealthPack(), isSafePath: true);
             else
                 autopilot.Activate(navigator.GetPathToExit(), isSafePath: true);
-            return autopilot.GetTurn() ?? GoToTheObscurity();
+            return autopilot.GetTurn() ?? GoToTheObscurity(levelView, messageReporter);
         }
 
-        private Turn GoToTheObscurity()
+        private Turn GoToTheObscurity(LevelView levelView, IMessageReporter messageReporter)
         {
             var path = navigator.GetPathToTheObscurity();
             logger.ReportMessage(path.Count.ToString());
