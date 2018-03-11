@@ -53,7 +53,7 @@ namespace SpurRoguelike.PlayerBot.Infrastructure
 
         public void Refresh(LevelView levelView)
         {
-            if (LevelWidth != levelView.Field.Width && LevelHeight != levelView.Field.Height) //New level
+            if (LevelWidth != levelView.Field.Width || LevelHeight != levelView.Field.Height || PlayerIsTeleported(levelView.Player.Location)) //New level
             {
                 LevelWidth = levelView.Field.Width;
                 LevelHeight = levelView.Field.Height;
@@ -99,6 +99,14 @@ namespace SpurRoguelike.PlayerBot.Infrastructure
                 Add(location, cellType, view);
             }
             Player = items[levelView.Player.Location.X, levelView.Player.Location.Y];
+        }
+
+        private bool PlayerIsTeleported(Location newLocation)
+        {
+            var offset = newLocation - Player.Location;
+            if (offset.XOffset < -1 || offset.XOffset > 1) return true;
+            if (offset.YOffset < -1 || offset.YOffset > 1) return true;
+            return false;
         }
     }
 }
