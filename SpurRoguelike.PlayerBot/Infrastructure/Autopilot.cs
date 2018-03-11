@@ -39,10 +39,8 @@ namespace SpurRoguelike.PlayerBot.Infrastructure
             if (path.Count == 0)
                 return Stop();
             var offset = path.Pop();
-            var currentLocation = map.Player.Location;
-            var nextCell = map.GetCell(currentLocation + offset);
-            if (nextCell.CellType == CellType.Hidden ||
-                nextCell.CellType == CellType.Trap ||
+            var nextCell = map.GetCell(map.Player.Location + offset);
+            if (nextCell.CellType == CellType.Trap ||
                 nextCell.CellType == CellType.Wall ||
                 nextCell.View is PawnView)
                 return Stop();

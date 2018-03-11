@@ -10,7 +10,6 @@ namespace SpurRoguelike.PlayerBot
         private Map map;
         private Navigator navigator;
         private Autopilot autopilot;
-        private IMessageReporter logger;
 
         public PlayerBot()
         {
@@ -21,7 +20,6 @@ namespace SpurRoguelike.PlayerBot
 
         public Turn MakeTurn(LevelView levelView, IMessageReporter messageReporter)
         {
-            logger = messageReporter;
             map.Refresh(levelView);
             map.SetLogger(messageReporter);
             navigator.SetLogger(messageReporter);
@@ -73,7 +71,6 @@ namespace SpurRoguelike.PlayerBot
         private Turn GoToTheObscurity(LevelView levelView, IMessageReporter messageReporter)
         {
             var path = navigator.GetPathToTheObscurity();
-            logger.ReportMessage(path.Count.ToString());
             autopilot.Activate(path);
             return autopilot.GetTurn() ?? Turn.None;
         }

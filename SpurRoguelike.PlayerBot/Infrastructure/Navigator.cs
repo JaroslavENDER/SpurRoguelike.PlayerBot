@@ -127,8 +127,7 @@ namespace SpurRoguelike.PlayerBot.Infrastructure
         {
             foreach (var offset in offsetsToAttack)
             {
-                var location = startLocation + offset;
-                var cell = map.GetCell(location);
+                var cell = map.GetCell(startLocation + offset);
                 if (searchPredicate(cell))
                     return true;
             }
