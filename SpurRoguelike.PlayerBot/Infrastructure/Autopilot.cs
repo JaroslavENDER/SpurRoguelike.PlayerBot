@@ -7,9 +7,8 @@ namespace SpurRoguelike.PlayerBot.Infrastructure
     internal class Autopilot
     {
         private Map map;
-        private IMessageReporter logger;
         private Stack<Offset> path;
-        private bool isSafePath;
+        private IMessageReporter logger;
         public bool IsActive { get; private set; }
 
         public Autopilot(Map map)
@@ -21,10 +20,9 @@ namespace SpurRoguelike.PlayerBot.Infrastructure
             logger = messageReporter;
         }
 
-        public void Activate(Stack<Offset> path, bool isSafePath)
+        public void Activate(Stack<Offset> path)
         {
             IsActive = true;
-            this.isSafePath = isSafePath;
             this.path = path;
         }
 
@@ -37,18 +35,6 @@ namespace SpurRoguelike.PlayerBot.Infrastructure
         }
 
         public Turn GetTurn()
-        {
-            return isSafePath ? GetSafeTurn() : GetNoSafeTurn();
-        }
-
-        private Turn GetNoSafeTurn()
-        {
-            if (path.Count == 0)
-                return Stop();
-            return Turn.Step(path.Pop());
-        }
-
-        private Turn GetSafeTurn()
         {
             if (path.Count == 0)
                 return Stop();

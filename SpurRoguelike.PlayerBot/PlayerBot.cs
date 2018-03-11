@@ -47,9 +47,9 @@ namespace SpurRoguelike.PlayerBot
         private Turn GoToTheHealth(LevelView levelView, IMessageReporter messageReporter)
         {
             if (navigator.IsHaveHealthPacks())
-                autopilot.Activate(navigator.GetPathToTheHealthPack(), isSafePath: true);
+                autopilot.Activate(navigator.GetPathToTheHealthPack());
             else
-                autopilot.Activate(navigator.GetPathToExit(), isSafePath: true);
+                autopilot.Activate(navigator.GetPathToExit());
             return autopilot.GetTurn() ?? GoToTheObscurity(levelView, messageReporter);
         }
 
@@ -57,16 +57,16 @@ namespace SpurRoguelike.PlayerBot
         {
             if (navigator.CheckCellsAround(map.Player.Location, cell => cell?.View is PawnView))
                 return Turn.Attack(navigator.GetOffsetToAttack());
-            autopilot.Activate(navigator.GetPathToTheMonster(), isSafePath: true);
+            autopilot.Activate(navigator.GetPathToTheMonster());
             return autopilot.GetTurn() ?? GoToTheObscurity(levelView, messageReporter);
         }
 
         private Turn GoToTheEnd(LevelView levelView, IMessageReporter messageReporter)
         {
             if (levelView.Player.Health < 100 && navigator.IsHaveHealthPacks())
-                autopilot.Activate(navigator.GetPathToTheHealthPack(), isSafePath: true);
+                autopilot.Activate(navigator.GetPathToTheHealthPack());
             else
-                autopilot.Activate(navigator.GetPathToExit(), isSafePath: true);
+                autopilot.Activate(navigator.GetPathToExit());
             return autopilot.GetTurn() ?? GoToTheObscurity(levelView, messageReporter);
         }
 
@@ -74,7 +74,7 @@ namespace SpurRoguelike.PlayerBot
         {
             var path = navigator.GetPathToTheObscurity();
             logger.ReportMessage(path.Count.ToString());
-            autopilot.Activate(path, isSafePath: true);
+            autopilot.Activate(path);
             return autopilot.GetTurn() ?? Turn.None;
         }
     }
