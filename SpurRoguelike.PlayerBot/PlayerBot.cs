@@ -71,6 +71,15 @@ namespace SpurRoguelike.PlayerBot
         private Turn GoToTheObscurity(LevelView levelView, IMessageReporter messageReporter)
         {
             var path = navigator.GetPathToTheObscurity();
+            if (path.Count != 0)
+            {
+                autopilot.Activate(path);
+                return autopilot.GetTurn();
+            }
+            var offset = navigator.GetOffsetToAttack();
+            if (offset != default(Offset))
+                return Turn.Attack(offset);
+            path = navigator.GetPathToTheMonster();
             autopilot.Activate(path);
             return autopilot.GetTurn() ?? Turn.None;
         }
