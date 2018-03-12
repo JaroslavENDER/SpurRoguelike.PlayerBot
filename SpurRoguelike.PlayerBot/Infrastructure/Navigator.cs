@@ -89,7 +89,7 @@ namespace SpurRoguelike.PlayerBot.Infrastructure
                     searchSuccessful = true;
                     break;
                 }
-                Mix(offsets);
+                //Mix(offsets);
                 foreach (var offset in offsets)
                 {
                     var nextLocation = currentLocation + offset;
