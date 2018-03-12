@@ -25,7 +25,7 @@ namespace SpurRoguelike.PlayerBot
             navigator.SetLogger(messageReporter);
             autopilot.SetLogger(messageReporter);
 
-            //System.Threading.Thread.Sleep(500);
+            if (map.Level == 5) System.Threading.Thread.Sleep(50);
 
             if (autopilot.IsActive)
             {
@@ -45,7 +45,7 @@ namespace SpurRoguelike.PlayerBot
         private Turn GoToTheHealth(LevelView levelView, IMessageReporter messageReporter)
         {
             if (navigator.IsHaveHealthPacks())
-                autopilot.Activate(navigator.GetPathToTheHealthPack());
+                autopilot.Activate(navigator.GetPathToTheHealthPack(levelView.Player.Health));
             else
                 autopilot.Activate(navigator.GetPathToExit());
             return autopilot.GetTurn() ?? GoToTheObscurity(levelView, messageReporter);
@@ -70,6 +70,8 @@ namespace SpurRoguelike.PlayerBot
 
         private Turn GoToTheObscurity(LevelView levelView, IMessageReporter messageReporter)
         {
+            messageReporter.ReportMessage(" Infinity is not limit!!!");
+
             var path = navigator.GetPathToTheObscurity();
             if (path.Count != 0)
             {

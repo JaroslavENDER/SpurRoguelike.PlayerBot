@@ -17,6 +17,13 @@ namespace SpurRoguelike.PlayerBot.Infrastructure
             new Offset(1, 0),
             new Offset(-1, 0),
         };
+        private Offset[] offsetsToMoveToLevel5 = new Offset[]
+        {
+            new Offset(0, 1),
+            new Offset(0, -1),
+            new Offset(1, 0),
+            new Offset(-1, 0),
+        };
         private Offset[] offsetsToAttack = new Offset[] 
         {
             new Offset(-1, -1),
@@ -51,9 +58,12 @@ namespace SpurRoguelike.PlayerBot.Infrastructure
             return GetPathTo(offsetsToMove, cell => cell.View is PawnView);
         }
 
-        public Stack<Offset> GetPathToTheHealthPack()
+        public Stack<Offset> GetPathToTheHealthPack(int playerHealth = 100)
         {
-            return GetPathTo(offsetsToMove, cell => cell.View is HealthPackView, cell => cell.View is PawnView || cell.View is ItemView);
+            if (map.Level == 5 && playerHealth < 10)
+                return GetPathTo(offsetsToMove, cell => cell.View is HealthPackView, cell => cell.View is PawnView || cell.View is ItemView || CheckCellsAround(cell.Location, c => c.View is PawnView));
+            else
+                return GetPathTo(offsetsToMove, cell => cell.View is HealthPackView, cell => cell.View is PawnView || cell.View is ItemView);
         }
 
         public Stack<Offset> GetPathToExit()
@@ -75,15 +85,17 @@ namespace SpurRoguelike.PlayerBot.Infrastructure
             var searchSuccessful = false;
             var queue = new Queue<Location>();
             queue.Enqueue(map.Player.Location);
+            if (map.Level == 5) offsets = offsetsToMoveToLevel5;
 
             while (queue.Count > 0)
             {
                 currentLocation = queue.Dequeue();
                 currentCell = map.GetCell(currentLocation);
-                if (currentCell == null
-                    || currentCell.CellType == CellType.Wall || currentCell.CellType == CellType.Trap
-                    || (aviodPredicate != null && aviodPredicate.Invoke(currentCell)))
-                    continue;
+                if (currentCell != map.Player)
+                    if (currentCell == null
+                        || currentCell.CellType == CellType.Wall || currentCell.CellType == CellType.Trap
+                        || (aviodPredicate != null && aviodPredicate.Invoke(currentCell)))
+                        continue;
                 if (searchPredicate(currentCell))
                 {
                     searchSuccessful = true;
