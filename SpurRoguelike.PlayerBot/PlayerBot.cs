@@ -25,7 +25,7 @@ namespace SpurRoguelike.PlayerBot
             navigator.SetLogger(messageReporter);
             autopilot.SetLogger(messageReporter);
 
-            if (map.Level == 5) System.Threading.Thread.Sleep(50);
+            if (map.Level == 5 && levelView.Player.Health < 10) System.Threading.Thread.Sleep(500);
 
             if (autopilot.IsActive)
             {

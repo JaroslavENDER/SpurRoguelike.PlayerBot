@@ -48,18 +48,19 @@ namespace SpurRoguelike.PlayerBot.Infrastructure
 
         public Offset GetOffsetToAttack()
         {
-            var path = GetPathTo(offsetsToAttack, cell => cell.View is PawnView);
-            if (path.Count != 1) return default(Offset);
-            return path.Pop();
+            logger.ReportMessage("GetOffsetToAttack()");
+            return GetPathTo(offsetsToAttack, cell => cell.View is PawnView).Pop();
         }
 
         public Stack<Offset> GetPathToTheMonster()
         {
+            logger.ReportMessage("GetPathToTheMonster()");
             return GetPathTo(offsetsToMove, cell => cell.View is PawnView);
         }
 
         public Stack<Offset> GetPathToTheHealthPack(int playerHealth = 100)
         {
+            logger.ReportMessage("GetPathToTheHealthPack()");
             if (map.Level == 5 && playerHealth < 10)
                 return GetPathTo(offsetsToMove, cell => cell.View is HealthPackView, cell => cell.View is PawnView || cell.View is ItemView || CheckCellsAround(cell.Location, c => c.View is PawnView));
             else
@@ -68,11 +69,13 @@ namespace SpurRoguelike.PlayerBot.Infrastructure
 
         public Stack<Offset> GetPathToExit()
         {
+            logger.ReportMessage("GetPathToExit()");
             return GetPathTo(offsetsToMove, cell => cell.CellType == CellType.Exit, cell => cell.View is PawnView);
         }
 
         public Stack<Offset> GetPathToTheObscurity()
         {
+            logger.ReportMessage("GetPathToTheObscurity()");
             return GetPathTo(offsetsToMove, cell => cell.CellType == CellType.Hidden, cell => cell.View is PawnView);
         }
 
