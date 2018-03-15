@@ -58,13 +58,10 @@ namespace SpurRoguelike.PlayerBot.Infrastructure
             return GetPathTo(offsetsToMove, cell => cell.View is PawnView);
         }
 
-        public Stack<Offset> GetPathToTheHealthPack(int playerHealth = 100)
+        public Stack<Offset> GetPathToTheHealthPack()
         {
             logger.ReportMessage("GetPathToTheHealthPack()");
-            if (map.Level == 5 && playerHealth < 10)
-                return GetPathTo(offsetsToMove, cell => cell.View is HealthPackView, cell => cell.View is PawnView || cell.View is ItemView || CheckCellsAround(cell.Location, c => c.View is PawnView));
-            else
-                return GetPathTo(offsetsToMove, cell => cell.View is HealthPackView, cell => cell.View is PawnView || cell.View is ItemView);
+            return GetPathTo(offsetsToMove, cell => cell.View is HealthPackView, cell => cell.View is PawnView || cell.View is ItemView);
         }
 
         public Stack<Offset> GetPathToExit()

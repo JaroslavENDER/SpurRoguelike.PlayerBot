@@ -44,7 +44,7 @@ namespace SpurRoguelike.PlayerBot.Infrastructure
                 nextCell.CellType == CellType.Wall ||
                 nextCell.View is PawnView)
                 return Stop();
-            if (path.Count < 10)
+            if (path.Count < 10 || map.Level == 5)
                 return Stop(offset);
             return Turn.Step(offset);
         }
