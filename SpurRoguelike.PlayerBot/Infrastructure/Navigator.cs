@@ -10,21 +10,14 @@ namespace SpurRoguelike.PlayerBot.Infrastructure
     {
         private Map map;
         private IMessageReporter logger;
-        private Offset[] offsetsToMove = new Offset[] 
+        private Offset[] offsetsToMove = new Offset[]
         {
             new Offset(0, -1),
             new Offset(0, 1),
             new Offset(1, 0),
             new Offset(-1, 0),
         };
-        private Offset[] offsetsToMoveToLevel5 = new Offset[]
-        {
-            new Offset(0, 1),
-            new Offset(0, -1),
-            new Offset(1, 0),
-            new Offset(-1, 0),
-        };
-        private Offset[] offsetsToAttack = new Offset[] 
+        private Offset[] offsetsToAttack = new Offset[]
         {
             new Offset(-1, -1),
             new Offset(0, -1),
@@ -34,6 +27,13 @@ namespace SpurRoguelike.PlayerBot.Infrastructure
             new Offset(-1, 1),
             new Offset(0, 1),
             new Offset(1, 1)
+        };
+        private Offset[] offsetsToLevel5 = new Offset[]
+        {
+            new Offset(0, 1),
+            new Offset(0, -1),
+            new Offset(1, 0),
+            new Offset(-1, 0),
         };
         private Random rand = new Random();
 
@@ -49,7 +49,10 @@ namespace SpurRoguelike.PlayerBot.Infrastructure
         public Offset GetOffsetToAttack()
         {
             logger.ReportMessage("GetOffsetToAttack()");
-            return GetPathTo(offsetsToAttack, cell => cell.View is PawnView).Pop();
+            if (map.Level == 5)
+                return GetPathTo(offsetsToLevel5, cell => cell.View is PawnView).Pop();
+            else
+                return GetPathTo(offsetsToAttack, cell => cell.View is PawnView).Pop();
         }
 
         public Stack<Offset> GetPathToTheMonster()
@@ -61,7 +64,10 @@ namespace SpurRoguelike.PlayerBot.Infrastructure
         public Stack<Offset> GetPathToTheHealthPack()
         {
             logger.ReportMessage("GetPathToTheHealthPack()");
-            return GetPathTo(offsetsToMove, cell => cell.View is HealthPackView, cell => cell.View is PawnView || cell.View is ItemView);
+            if (map.Level == 5)
+                return GetPathTo(offsetsToLevel5, cell => cell.View is HealthPackView, cell => cell.View is PawnView || cell.View is ItemView);
+            else
+                return GetPathTo(offsetsToMove, cell => cell.View is HealthPackView, cell => cell.View is PawnView || cell.View is ItemView);
         }
 
         public Stack<Offset> GetPathToExit()
@@ -85,7 +91,6 @@ namespace SpurRoguelike.PlayerBot.Infrastructure
             var searchSuccessful = false;
             var queue = new Queue<Location>();
             queue.Enqueue(map.Player.Location);
-            if (map.Level == 5) offsets = offsetsToMoveToLevel5;
 
             while (queue.Count > 0)
             {
